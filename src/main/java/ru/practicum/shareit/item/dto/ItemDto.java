@@ -26,6 +26,7 @@ public class ItemDto {
     private Long requestId;
     private BookingDtoShort lastBooking;
     private BookingDtoShort nextBooking;
+    @Builder.Default
     private List<CommentDto> comments = new ArrayList<>();
 
     public ItemDto(Long id, String name, String description, Boolean available, Long requestId) {

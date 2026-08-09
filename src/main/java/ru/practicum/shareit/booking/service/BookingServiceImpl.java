@@ -92,7 +92,7 @@ public class BookingServiceImpl implements BookingService {
         getUserOrThrowNotFound(userId);
         LocalDateTime now = LocalDateTime.now();
 
-        return (switch (state) {
+        return ( switch (state) {
             case ALL -> bookingRepository.findByBooker_Id(userId, START_DESC);
             case CURRENT -> bookingRepository.findByBooker_IdAndStartBeforeAndEndAfter(userId, now, now, START_DESC);
             case PAST -> bookingRepository.findByBooker_IdAndEndBefore(userId, now, START_DESC);
@@ -111,7 +111,7 @@ public class BookingServiceImpl implements BookingService {
         getUserOrThrowNotFound(userId);
         LocalDateTime now = LocalDateTime.now();
 
-        return (switch (state) {
+        return ( switch (state) {
             case ALL -> bookingRepository.findByItem_Owner_Id(userId, START_DESC);
             case CURRENT ->
                     bookingRepository.findByItem_Owner_IdAndStartBeforeAndEndAfter(userId, now, now, START_DESC);
