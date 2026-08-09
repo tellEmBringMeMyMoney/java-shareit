@@ -92,7 +92,7 @@ public class BookingServiceImpl implements BookingService {
         getUserOrThrowNotFound(userId);
         LocalDateTime now = LocalDateTime.now();
 
-        return ( switch (state) {
+        /*return ( switch (state) {
             case ALL -> bookingRepository.findByBooker_Id(userId, START_DESC);
             case CURRENT -> bookingRepository.findByBooker_IdAndStartBeforeAndEndAfter(userId, now, now, START_DESC);
             case PAST -> bookingRepository.findByBooker_IdAndEndBefore(userId, now, START_DESC);
@@ -100,6 +100,18 @@ public class BookingServiceImpl implements BookingService {
             case WAITING -> bookingRepository.findByBooker_IdAndStatus(userId, Status.WAITING, START_DESC);
             case REJECTED -> bookingRepository.findByBooker_IdAndStatus(userId, Status.REJECTED, START_DESC);
         }).stream()
+                .map(BookingMapper::toBookingDto)
+                .toList();*/
+        List<Booking> bookings = switch (state) {
+            case ALL -> bookingRepository.findByBooker_Id(userId, START_DESC);
+            case CURRENT -> bookingRepository.findByBooker_IdAndStartBeforeAndEndAfter(userId, now, now, START_DESC);
+            case PAST -> bookingRepository.findByBooker_IdAndEndBefore(userId, now, START_DESC);
+            case FUTURE -> bookingRepository.findByBooker_IdAndStartAfter(userId, now, START_DESC);
+            case WAITING -> bookingRepository.findByBooker_IdAndStatus(userId, Status.WAITING, START_DESC);
+            case REJECTED -> bookingRepository.findByBooker_IdAndStatus(userId, Status.REJECTED, START_DESC);
+        };
+
+        return bookings.stream()
                 .map(BookingMapper::toBookingDto)
                 .toList();
     }
@@ -111,7 +123,7 @@ public class BookingServiceImpl implements BookingService {
         getUserOrThrowNotFound(userId);
         LocalDateTime now = LocalDateTime.now();
 
-        return ( switch (state) {
+        /*return switch (state) {
             case ALL -> bookingRepository.findByItem_Owner_Id(userId, START_DESC);
             case CURRENT ->
                     bookingRepository.findByItem_Owner_IdAndStartBeforeAndEndAfter(userId, now, now, START_DESC);
@@ -119,11 +131,24 @@ public class BookingServiceImpl implements BookingService {
             case FUTURE -> bookingRepository.findByItem_Owner_IdAndStartAfter(userId, now, START_DESC);
             case WAITING -> bookingRepository.findByItem_Owner_IdAndStatus(userId, Status.WAITING, START_DESC);
             case REJECTED -> bookingRepository.findByItem_Owner_IdAndStatus(userId, Status.REJECTED, START_DESC);
-        }).stream()
+        }.stream()
+                .map(BookingMapper::toBookingDto)
+                .toList();*/
+
+        List<Booking> bookings = switch (state) {
+            case ALL -> bookingRepository.findByItem_Owner_Id(userId, START_DESC);
+            case CURRENT -> bookingRepository.findByItem_Owner_IdAndStartBeforeAndEndAfter(userId, now, now, START_DESC);
+            case PAST -> bookingRepository.findByItem_Owner_IdAndEndBefore(userId, now, START_DESC);
+            case FUTURE -> bookingRepository.findByItem_Owner_IdAndStartAfter(userId, now, START_DESC);
+            case WAITING -> bookingRepository.findByItem_Owner_IdAndStatus(userId, Status.WAITING, START_DESC);
+            case REJECTED -> bookingRepository.findByItem_Owner_IdAndStatus(userId, Status.REJECTED, START_DESC);
+        };
+
+        return bookings.stream()
                 .map(BookingMapper::toBookingDto)
                 .toList();
 
-    }
+        }
 
     private void validateDates(LocalDateTime start, LocalDateTime end) {
         if (!end.isAfter(start)) {
