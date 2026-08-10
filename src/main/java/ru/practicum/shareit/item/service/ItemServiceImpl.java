@@ -152,8 +152,6 @@ public class ItemServiceImpl implements ItemService {
     public CommentDto addComment(Long userId, Long itemId, CommentDto commentDto) {
         log.info("Adding comment for itemId={}, userId={}, dto={}", itemId, userId, commentDto);
 
-        validateComment(commentDto);
-
         boolean hasCompletedBooking = bookingRepository.existsByItem_IdAndBooker_IdAndStatusAndEndBefore(
                 itemId,
                 userId,
@@ -202,12 +200,6 @@ public class ItemServiceImpl implements ItemService {
 
     private boolean validateDescription(String description) {
         return description != null && !description.isBlank();
-    }
-
-    private void validateComment(CommentDto commentDto) {
-        if (commentDto == null || commentDto.getText() == null || commentDto.getText().isBlank()) {
-            throw new BadRequestException("Comment can not be empty");
-        }
     }
 
     private ItemDto toDetailedItemDto(Item item, Long userId, List<CommentDto> comments, List<BookingDto> bookings) {

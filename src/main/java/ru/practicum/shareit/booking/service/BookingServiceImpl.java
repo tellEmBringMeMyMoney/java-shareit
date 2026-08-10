@@ -92,16 +92,6 @@ public class BookingServiceImpl implements BookingService {
         getUserOrThrowNotFound(userId);
         LocalDateTime now = LocalDateTime.now();
 
-        /*return ( switch (state) {
-            case ALL -> bookingRepository.findByBooker_Id(userId, START_DESC);
-            case CURRENT -> bookingRepository.findByBooker_IdAndStartBeforeAndEndAfter(userId, now, now, START_DESC);
-            case PAST -> bookingRepository.findByBooker_IdAndEndBefore(userId, now, START_DESC);
-            case FUTURE -> bookingRepository.findByBooker_IdAndStartAfter(userId, now, START_DESC);
-            case WAITING -> bookingRepository.findByBooker_IdAndStatus(userId, Status.WAITING, START_DESC);
-            case REJECTED -> bookingRepository.findByBooker_IdAndStatus(userId, Status.REJECTED, START_DESC);
-        }).stream()
-                .map(BookingMapper::toBookingDto)
-                .toList();*/
         List<Booking> bookings = switch (state) {
             case ALL -> bookingRepository.findByBooker_Id(userId, START_DESC);
             case CURRENT -> bookingRepository.findByBooker_IdAndStartBeforeAndEndAfter(userId, now, now, START_DESC);
@@ -123,21 +113,11 @@ public class BookingServiceImpl implements BookingService {
         getUserOrThrowNotFound(userId);
         LocalDateTime now = LocalDateTime.now();
 
-        /*return switch (state) {
-            case ALL -> bookingRepository.findByItem_Owner_Id(userId, START_DESC);
-            case CURRENT ->
-                    bookingRepository.findByItem_Owner_IdAndStartBeforeAndEndAfter(userId, now, now, START_DESC);
-            case PAST -> bookingRepository.findByItem_Owner_IdAndEndBefore(userId, now, START_DESC);
-            case FUTURE -> bookingRepository.findByItem_Owner_IdAndStartAfter(userId, now, START_DESC);
-            case WAITING -> bookingRepository.findByItem_Owner_IdAndStatus(userId, Status.WAITING, START_DESC);
-            case REJECTED -> bookingRepository.findByItem_Owner_IdAndStatus(userId, Status.REJECTED, START_DESC);
-        }.stream()
-                .map(BookingMapper::toBookingDto)
-                .toList();*/
 
         List<Booking> bookings = switch (state) {
             case ALL -> bookingRepository.findByItem_Owner_Id(userId, START_DESC);
-            case CURRENT -> bookingRepository.findByItem_Owner_IdAndStartBeforeAndEndAfter(userId, now, now, START_DESC);
+            case CURRENT ->
+                    bookingRepository.findByItem_Owner_IdAndStartBeforeAndEndAfter(userId, now, now, START_DESC);
             case PAST -> bookingRepository.findByItem_Owner_IdAndEndBefore(userId, now, START_DESC);
             case FUTURE -> bookingRepository.findByItem_Owner_IdAndStartAfter(userId, now, START_DESC);
             case WAITING -> bookingRepository.findByItem_Owner_IdAndStatus(userId, Status.WAITING, START_DESC);
@@ -148,7 +128,7 @@ public class BookingServiceImpl implements BookingService {
                 .map(BookingMapper::toBookingDto)
                 .toList();
 
-        }
+    }
 
     private void validateDates(LocalDateTime start, LocalDateTime end) {
         if (!end.isAfter(start)) {
@@ -158,21 +138,21 @@ public class BookingServiceImpl implements BookingService {
 
     private User getUserOrThrowBadRequest(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new ForbiddenException("User not found"));
+                .orElseThrow(() -> new ForbiddenException("User not found with id = " + userId));
     }
 
     private User getUserOrThrowNotFound(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found with id = " + userId));
     }
 
     private Item getItemOrThrow(Long itemId) {
         return itemRepository.findById(itemId)
-                .orElseThrow(() -> new NotFoundException("Item not found"));
+                .orElseThrow(() -> new NotFoundException("Item not found with id = " + itemId));
     }
 
     private Booking getBookingOrThrow(Long bookingId) {
         return bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new NotFoundException("Booking not found"));
+                .orElseThrow(() -> new NotFoundException("Booking not found with id = " + bookingId));
     }
 }
