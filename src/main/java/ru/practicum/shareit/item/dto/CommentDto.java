@@ -1,23 +1,21 @@
-package ru.practicum.shareit.request;
+package ru.practicum.shareit.item.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-item-requests.
- */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemRequest {
+public class CommentDto {
     private Long id;
-    private String description;
-    private User requestor;
+    @NotBlank(message = "Comment content can not be empty")
+    private String text;
+    private String authorName;
     private LocalDateTime created;
 }

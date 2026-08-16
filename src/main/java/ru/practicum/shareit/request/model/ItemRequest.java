@@ -1,46 +1,39 @@
-package ru.practicum.shareit.booking.model;
+package ru.practicum.shareit.request.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * TODO Sprint add-item-requests.
+ */
 @Entity
-@Table(name = "bookings")
+@Table(name = "requests")
 @Getter
 @Setter
 @ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Booking {
+public class ItemRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "begin_date", nullable = false)
-    private LocalDateTime start;
-
-    @Column(name = "end_date", nullable = false)
-    private LocalDateTime end;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id", nullable = false)
-    @ToString.Exclude
-    private Item item;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "booker_id", nullable = false)
-    @ToString.Exclude
-    private User booker;
-
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Status status;
+    private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "requestor_id", nullable = false)
+    @ToString.Exclude
+    private User requestor;
+
+    @Column(nullable = false)
+    private LocalDateTime created;
 
     @Override
     public final boolean equals(Object o) {
@@ -49,8 +42,8 @@ public class Booking {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Booking booking = (Booking) o;
-        return getId() != null && Objects.equals(getId(), booking.getId());
+        ItemRequest that = (ItemRequest) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
