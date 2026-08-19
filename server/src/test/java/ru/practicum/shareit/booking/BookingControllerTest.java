@@ -65,7 +65,7 @@ public class BookingControllerTest {
         );
         Mockito.when(bookingService.create(2L, request)).thenReturn(response);
 
-        Status BookingStatus;
+        Status bookingStatus;
         mvc.perform(post("/bookings")
                         .header(USER_ID_HEADER, 2L)
                         .contentType(MediaType.APPLICATION_JSON)
